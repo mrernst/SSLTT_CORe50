@@ -59,6 +59,7 @@ def show_batch(sample_batched):
 # custom CLTT dataset superclass (abstract)
 # -----
 
+
 class CLTTDataset(Dataset):
     """
     CLTTDataset is an abstract class implementing all the necessary methods
@@ -68,8 +69,7 @@ class CLTTDataset(Dataset):
     """
 
     def __init__(self, root, split='train', transform=None, target_transform=None,
-                 n_fix=5, contrastive=True, sampling_mode='uniform',
-                 shuffle_object_order=True, circular_sampling=True, buffer_size=12096):
+                 n_fix=5, contrastive=True, sampling_mode='uniform', shuffle_object_order=True, circular_sampling=True, buffer_size=12096):
         """
         __init__ initializes the CLTTDataset Class, it defines class-wide
         constants and builds the registry of files and the data buffer
@@ -261,7 +261,7 @@ class CLTTDataset(Dataset):
             assert os.path.isdir(d), 'Test directory does not exist'
         else:
             d = self.root + self.subdirectory + 'validation/'
-            if not(os.path.isdir(d)):
+            if not (os.path.isdir(d)):
                 print(
                     '[INFO] Validation directory does not exist, using testset instead')
                 d = self.root + self.subdirectory + 'test/'
@@ -576,7 +576,7 @@ class CORE50Dataset(CLTTDataset):
         current_session = self.registry[self.registry.object_nr ==
                                         object_nr].iloc[current_view].session
         max_view = len(self.registry[self.registry.object_nr ==
-                                     object_nr][self.registry.session == current_session]) - 1
+                       object_nr][self.registry.session == current_session]) - 1
 
         if self._n_fix_per_session > N and self._n_fix_per_session >= 1.0:
             # do regular (fast) uniform sampling
@@ -616,7 +616,7 @@ class CORE50Dataset(CLTTDataset):
                 other_sessions.remove(current_session)
                 current_session = np.random.choice(list(other_sessions))
                 max_view = len(self.registry[self.registry.object_nr ==
-                                             object_nr][self.registry.session == current_session]) - 1
+                               object_nr][self.registry.session == current_session]) - 1
 
             index = np.concatenate(index)[:N]
             return index
@@ -649,7 +649,7 @@ class CORE50Dataset(CLTTDataset):
                                         object_nr].iloc[current_view].session
 
         max_view = len(self.registry[self.registry.object_nr ==
-                                     object_nr][self.registry.session == current_session]) - 1
+                       object_nr][self.registry.session == current_session]) - 1
         current_view = np.random.randint(min_view, max_view)
 
         counter = 0
@@ -677,7 +677,7 @@ class CORE50Dataset(CLTTDataset):
             other_sessions.remove(current_session)
             current_session = np.random.choice(list(other_sessions))
             max_view = len(self.registry[self.registry.object_nr ==
-                                         object_nr][self.registry.session == current_session]) - 1
+                           object_nr][self.registry.session == current_session]) - 1
             current_view = np.random.randint(min_view, max_view)
             position = []
         index = np.concatenate(index)[:N]
@@ -710,7 +710,7 @@ class CORE50Dataset(CLTTDataset):
                                         object_nr].iloc[current_view].session
 
         max_view = len(self.registry[self.registry.object_nr ==
-                                     object_nr][self.registry.session == current_session]) - 1
+                       object_nr][self.registry.session == current_session]) - 1
         current_view = np.random.randint(min_view, max_view)
 
         counter = 0
@@ -741,7 +741,7 @@ class CORE50Dataset(CLTTDataset):
             other_sessions.remove(current_session)
             current_session = np.random.choice(list(other_sessions))
             max_view = len(self.registry[self.registry.object_nr ==
-                                         object_nr][self.registry.session == current_session]) - 1
+                           object_nr][self.registry.session == current_session]) - 1
             current_view = np.random.randint(min_view, max_view)
             position = []
         index = np.concatenate(index)[:N]
@@ -779,7 +779,7 @@ class CORE50Dataset(CLTTDataset):
         if split == 'train':
             sessions = [1, 2, 4, 5, 6, 8, 9, 11]
             objects = range(self.n_objects)
-            def sample_in_split(id): return not(id % 10 == 0)
+            def sample_in_split(id): return not (id % 10 == 0)
         elif split == 'test':
             sessions = [3, 7, 10]
             objects = range(self.n_objects)
@@ -793,7 +793,7 @@ class CORE50Dataset(CLTTDataset):
             sessions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
             objects = [o for o in range(self.n_objects) if (o-k) % 5]
 
-            def sample_in_split(id): return not(id % 10 == 0)
+            def sample_in_split(id): return not (id % 10 == 0)
         elif 'test_alt' in split:
             k = int(split.split('_')[-1])
             sessions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
