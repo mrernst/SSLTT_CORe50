@@ -19,6 +19,30 @@ import json
 # custom functions
 # -----
 
+@torch.no_grad()
+def update_target_network_parameters(target, source, tau):
+    """
+    function used to update the target net parameters to follow the running exponential average of online network.
+        target: target network
+        source: online network
+        tau: hyper-parameter that controls the update
+    """
+    for target_param, param in zip(target.parameters(), source.parameters()):
+        target_param.data = target_param.data * tau + param.data * (1.0 - tau)
+
+
+def initialize_target_network(target, source):
+    """
+    function used to initialize the target network in BYOL.
+        target: target network
+        source: online network
+    """
+    # init momentum network as encoder net
+    for param_q, param_k in zip(source.parameters(), target.parameters()):
+        param_k.data.copy_(param_q.data)  # initialize
+        param_k.requires_grad = False  # not update by gradient
+
+
 def save_model(net, writer, epoch):
     """
         function used to save model parameters to the log directory
