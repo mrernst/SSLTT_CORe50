@@ -29,9 +29,9 @@ import config
 from utils.datasets import CORE50Dataset
 from utils.networks import ResNet18, MLPHead
 from utils.losses import SimCLR_TT_Loss, BYOL_TT_Loss, VICReg_TT_Loss
-from utils.general import update_target_network_parameters, initialize_target_network, 
+from utils.general import update_target_network_parameters, initialize_target_network
 from utils.general import save_model, load_model, save_args, mkdir_p
-from utils.evaluation import get_representations, lls_fit, lls_eval, supervised_eval, knn_eval, wcss_bcss
+from utils.evaluation import get_representations, lls_fit, lls_eval, supervised_eval, wcss_bcss
 from utils.augmentations import get_transformations, TwoContrastTransform
 
 
