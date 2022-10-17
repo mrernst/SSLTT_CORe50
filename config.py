@@ -12,13 +12,10 @@ import datetime
 import torch
 
 # helper function for passing None via CLI
-
-
 def none_or_str(value):
     if value == 'None':
         return None
     return value
-
 
 # parse args that correspond to configurations to be experimented on
 parser = argparse.ArgumentParser()
@@ -71,10 +68,10 @@ parser.add_argument('--no-exhaustive_test',
 parser.set_defaults(exhaustive_test=True)
 parser.add_argument('--main_loss',
                     default='SimCLR',
-                    choices=['SimCLR', 'supervised', 'supervised_representation'], type=str)
+                    choices=['SimCLR', 'BYOL', 'VICReg', 'supervised', 'supervised_representation'], type=str)
 parser.add_argument('--contrast',
                     default='time',
-                    choices=['time', 'classic', 'combined', 'supervised', 'nocontrast'], type=str)
+                    choices=['time', 'classic', 'combined', 'supervised', 'nocontrast', 'combined_jitter', 'combined_jitterpluscrop', 'combined_jitterplusgrayscale', 'combined_grayscale'], type=str)
 parser.add_argument('--reg_loss',
                     default=None,
                     choices=[None], type=none_or_str)
@@ -134,6 +131,7 @@ parser.add_argument('--save_embedding',
                     type=bool)
 
 
+
 parser.add_argument('--feature_dim',
                     default=128,
                     type=int)
@@ -165,9 +163,22 @@ parser.add_argument('--crop_size',
                     default=128,
                     type=int)
 
-parser.add_argument("--experiment_dir",
-                    help="full path to experiment directory for loading files",
-                    type=str)
+
+# VICREG arguments
+parser.add_argument("--sim-coeff", type=float, default=25.0,
+                                    help='Invariance regularization loss coefficient')
+parser.add_argument("--std-coeff", type=float, default=25.0,
+                    help='Variance regularization loss coefficient')
+parser.add_argument("--cov-coeff", type=float, default=1.0,
+                    help='Covariance regularization loss coefficient')
+
+
+
+parser.add_argument('--knn_batch_size',
+                    default=256,
+                    type=int)
+parser.add_argument("--experiment_dir", help="full path to experiment directory for loading files",
+                type=str)
 
 args = parser.parse_args()
 
@@ -200,11 +211,11 @@ TEMPERATURE = args.temperature
 DATASET = args.dataset
 RUN_NAME = f'{datetime.datetime.now().strftime("%d-%m-%y_%H:%M")}_{args.name}_{DATASET}_aug_{CONTRAST}_{VIEW_SAMPLING}_{MAIN_LOSS}_reg_{REG_LOSS}_nfix_{N_fix}_persess_{N_fix_per_session}'
 
-
+# only implemented on CORe50
 TRAINING_PERCENTAGE = args.training_percentage
 TESTING_PERCENTAGE = args.testing_percentage
 EXHAUSTIVE_TEST = args.exhaustive_test
-
+KNN_BATCH_SIZE = args.knn_batch_size
 
 FEATURE_DIM = args.feature_dim
 HIDDEN_DIM = args.hidden_dim
@@ -217,9 +228,15 @@ TAU = args.tau
 BATCH_SIZE = args.batch_size
 CROP_SIZE = args.crop_size
 
+# only vicreg parameters
+VICREG_SIM_COEFF = args.sim_coeff
+VICREG_STD_COEFF = args.std_coeff
+VICREG_COV_COEFF = args.cov_coeff
+
 # configurations that are not tuned
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
-LR_DECAY_EPOCHS = [0]  # [700, 800, 900]
+PRIOR = 'gaussian'
+LR_DECAY_EPOCHS = [0] #[700, 800, 900]
 
 
 # _____________________________________________________________________________
