@@ -1,8 +1,8 @@
-# Time to augment contrastive learning
+# Time to augment visual self-supervised learning
 ## The CORe50 Environment
 
 <p align="center">
-  <img src="./img/core50_procedure.pdf" width="1000">
+  <img src="https://github.com/mrernst/timetoaugment/blob/main/img/core50_procedure.pdf" width="1000">
 
 This code accompanies the manuscript "Time to augment contrastive learning". It contains all the necessary building blocks to replicate the results reported.
 
