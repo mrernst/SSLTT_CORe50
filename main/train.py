@@ -28,9 +28,10 @@ import config
 # -----
 from utils.datasets import CORE50Dataset
 from utils.networks import ResNet18, MLPHead
-from utils.losses import SimCLR_TT_Loss
+from utils.losses import SimCLR_TT_Loss, BYOL_TT_Loss, VICReg_TT_Loss
+from utils.general import update_target_network_parameters, initialize_target_network, 
 from utils.general import save_model, load_model, save_args, mkdir_p
-from utils.evaluation import get_representations, lls_fit, lls_eval, supervised_eval, wcss_bcss
+from utils.evaluation import get_representations, lls_fit, lls_eval, supervised_eval, knn_eval, wcss_bcss
 from utils.augmentations import get_transformations, TwoContrastTransform
 
 
@@ -43,9 +44,12 @@ SIMILARITY_FUNCTIONS = {
 # loss dictionary for different losses
 MAIN_LOSS = {
     'SimCLR': SimCLR_TT_Loss(SIMILARITY_FUNCTIONS[config.SIMILARITY], config.BATCH_SIZE, config.TEMPERATURE),
+    'BYOL': BYOL_TT_Loss(SIMILARITY_FUNCTIONS[config.SIMILARITY]),
+    'VICReg': VICReg_TT_Loss(),
     'supervised': lambda x, x_pair, labels: F.cross_entropy(x, labels),
     'supervised_representation': lambda x, x_pair, labels: F.cross_entropy(x, labels),
 }
+
 
 REG_LOSS = {}
 
@@ -138,9 +142,21 @@ def train():
         net_target = ResNet18(no_classes=dataset_train.n_classes).to(config.DEVICE).eval()
     else:
         raise NotImplementedError('[INFO] Specified Encoder is not implemented')
-
-    optimizer = torch.optim.AdamW(net.parameters(), lr=config.LRATE, weight_decay=config.WEIGHT_DECAY)
-
+    
+    
+    # specific when BYOL-TT is used
+    if config.MAIN_LOSS == 'BYOL':
+        # net_target.train()
+        predictor = MLPHead(config.FEATURE_DIM, config.HIDDEN_DIM, config.FEATURE_DIM).to(config.DEVICE)
+        # initialize target network
+        initialize_target_network(net_target, net)
+    
+    
+        optimizer = torch.optim.AdamW(list(net.parameters()) + list(predictor.parameters()), lr=config.LRATE, weight_decay=config.WEIGHT_DECAY)
+    else:
+        optimizer = torch.optim.AdamW(net.parameters(), lr=config.LRATE, weight_decay=config.WEIGHT_DECAY)
+    
+    
     # get initial result and save plot and record
     if config.MAIN_LOSS == 'supervised':
         
@@ -280,12 +296,28 @@ def train():
         if config.CONTRAST != 'classic':
             dataset_train.refresh_buffer()
         
+        net.train()
         training_loop = tqdm(dataloader_train)
         for (x, x_pair), labels in training_loop:
             x, y = torch.cat([x, x_pair], 0).to(config.DEVICE), labels.to(config.DEVICE)
             representation, projection = net(x)
             projection, pair = projection.split(projection.shape[0]//2)
-            loss = MAIN_LOSS[config.MAIN_LOSS](projection, pair, y)
+            if config.MAIN_LOSS == 'BYOL':
+                # compute query feature
+                predictions_from_view_1 = predictor(projection)
+                predictions_from_view_2 = predictor(pair)
+                # compute key feature
+                with torch.no_grad():
+                    _ , target_output = net_target(x)
+                    targets_to_view_2, targets_to_view_1 = target_output.split(target_output.shape[0]//2)
+                
+                loss = MAIN_LOSS[config.MAIN_LOSS](predictions_from_view_1, targets_to_view_1, y)
+                loss += MAIN_LOSS[config.MAIN_LOSS](predictions_from_view_2, targets_to_view_2, y)
+                loss = loss.mean()
+                update_target_network_parameters(net_target, net, config.TAU)
+            else:
+                loss = MAIN_LOSS[config.MAIN_LOSS](projection, pair, y)
+            
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
             optimizer.step()
