@@ -1,4 +1,4 @@
-# Time to augment visual self-supervised learning
+# Time to augment self-supervised visual representation learning
 ## The CORe50 Environment
 
 <p align="center">
