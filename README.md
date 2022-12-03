@@ -9,7 +9,7 @@ This code accompanies the ICLR paper "Time to augment visual self-supervised lea
 
 ## Getting started with the code
 
-* Clone the repository from here (for now it is just a folder in the supplement)
+* Clone the repository from here
 * Make sure you have all the dependencies installed, see also requirements.txt
 * Download the corresponding [CORe50 dataset](http://bias.csr.unibo.it/maltoni/download/core50/core50_128x128.zip) files
 * Start an experiment on your local machine with python3 main/train.py
