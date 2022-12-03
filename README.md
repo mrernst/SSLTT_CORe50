@@ -11,7 +11,7 @@ This code accompanies the ICLR paper "Time to augment visual self-supervised lea
 
 * Clone the repository from here (for now it is just a folder in the supplement)
 * Make sure you have all the dependencies installed, see also requirements.txt
-* Download the corresponding CORe50 dataset files
+* Download the corresponding [CORe50 dataset](http://bias.csr.unibo.it/maltoni/download/core50/core50_128x128.zip) files
 * Start an experiment on your local machine with python3 main/train.py
 
 ### Prerequisites
@@ -38,10 +38,10 @@ This code accompanies the ICLR paper "Time to augment visual self-supervised lea
 │   └── core50_procedure_.png          # Image that displays in README.md
 ├── LICENSE                            # MIT License
 ├── main
-│   ├── Fig4_baselines.sh              # slurm script to send experiment to the cluster
-│   ├── Fig4_combined.sh               # slurm script to send experiment to the cluster
-│   ├── Fig4_ablation_experiment.sh    # slurm script to send experiment to the cluster
-│   ├── Fig7_ablation_experiment.sh    # slurm script to send experiment to the cluster
+│   ├── CORe50_baselines.sh            # slurm script to send experiment to the cluster
+│   ├── CORe50_combined.sh             # slurm script to send experiment to the cluster
+│   ├── CORe50_param_experiment.sh     # slurm script to send experiment to the cluster
+│   ├── CORe50_param_experiment.sh     # slurm script to send experiment to the cluster
 │   └── train.py                       # main training file     		                 		    
 ├── README.md                          # ReadMe File
 ├── requirements.txt                   # conda/pip requirements
