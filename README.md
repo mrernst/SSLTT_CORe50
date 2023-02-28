@@ -1,10 +1,6 @@
 # Time to augment self-supervised visual representation learning
 ## The CORe50 Environment
 
-<p align="center">
-  <img src="https://github.com/mrernst/timetoaugment/blob/main/img/core50_procedure.jpg" width="1000">
-
-
 
 ## Getting started with the code
 
@@ -88,7 +84,7 @@ python3 main/train.py \
 	--data_root './data/' \                         # specify where you put the CORe50 dataset
 	--n_fix 0.95 \                                  # specify N_o as float probability [0,1]
 	--n_fix_per_session 0.95 \                      # specify N_s as float probability [0,1]
-	--contrast 'time' \                             # choose 'time' or 'combined'
+	--contrast 'time' \                             # choose 'time' or 'combined' for -TT or TT+
 	--view_sampling randomwalk \                    # choose 'randomwalk' or 'uniform'
 	--test_every 10 \                               # test every 10 epochs
 	--train_split train_alt_0 \                     # choose the splits for cross-validation (k in range(5))
@@ -123,6 +119,12 @@ python3 main/train.py \
 	--val_split val_alt_0 \
 
 ```
+
+#### Run the experiments of the paper
+
+There are several slurm sbatch scripts to run exactly the runs that are presented in our ICLR contribution. These scripts can be found under ./main.
+Execute one of the scripts script to start a batch job using the slurm job manager that includes all runs presented in a specific Figure or Table,
+e.g. tab3_foobar.sh includes all runs for the CORE50 environment referenced in table 3.
 
 ## License
 
