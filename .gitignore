@@ -144,7 +144,7 @@ data/*
 .idea
 
 # bash scripts
-*.sh
+#*.sh
 
 # development sbatch script
 run_on_cluster.sbatch
