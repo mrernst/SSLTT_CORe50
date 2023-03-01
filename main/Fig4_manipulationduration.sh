@@ -54,7 +54,6 @@ contrast_array=(\
 srun python3 main/train.py \
 	--name ICLR_Fig4D_$1 \
 	--dataset 'CORE50' \
-	--data_root '/home/aecgroup/aecdata/markusernst/datasets/contrastive/' \
 	--n_fix ${n_fix_array[$j]} \
 	--n_fix_per_session 0.95 \
 	--main_loss 'SimCLR' \

@@ -70,7 +70,6 @@ lratedecay_array=(\
 srun python3 main/train.py \
 	--name ICLR_Tab1_$1 \
 	--dataset 'CORE50' \
-	--data_root '/home/aecgroup/aecdata/markusernst/datasets/contrastive/' \
 	--n_fix 0.9 \
 	--n_fix_per_session 0.5 \
 	--main_loss ${loss_array[$j]} \

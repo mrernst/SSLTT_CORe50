@@ -50,7 +50,6 @@ n_fix_per_session_array=(\
 srun python3 main/train.py \
 	--name ICLR_Fig5_$1 \
 	--dataset 'CORE50' \
-	--data_root '/home/aecgroup/aecdata/markusernst/datasets/contrastive/' \
 	--n_fix ${n_fix_array[$j]} \
 	--n_fix_per_session ${n_fix_per_session_array[$j]} \
 	--main_loss 'SimCLR' \
