@@ -68,14 +68,6 @@ random.seed(config.SEED)
 np.random.seed(config.SEED)
 
 
-def log_knn_acc(train_features, train_labels, test_features, test_labels, test_dataset, sim_function, tb_writer, timestep, confusion_matrix, qualifier_str='test/class', batch_size=512):
-    knn_pred, knn_acc = knn_eval(train_features, train_labels, test_features, test_labels, test_dataset.n_classes, sim_function, batch_size)
-    
-    tb_writer.add_scalar(f'accloss/{qualifier_str}/knn_accuracy', knn_acc, timestep)
-    confusion_matrix.update(knn_pred.cpu(), test_labels.cpu())
-    confusion_matrix.to_tensorboard(tb_writer, test_dataset.labels, timestep, label=f'{qualifier_str}/knn_cm',)
-    confusion_matrix.reset()
-    pass
 
 
 # custom function
