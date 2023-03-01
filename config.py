@@ -117,6 +117,7 @@ parser.add_argument('--no-shuffle_objects',
                     dest='shuffle_object_order',
                     action='store_false')
 parser.set_defaults(shuffle_object_order=True)
+parser.add_argument("--seed",type=int,default=0)
 
 parser.add_argument('--save_model',
                     dest='save_model',
@@ -209,7 +210,9 @@ COSINE_DECAY = args.cosine_decay
 EXP_DECAY = args.exp_decay
 TEMPERATURE = args.temperature
 DATASET = args.dataset
-RUN_NAME = f'{datetime.datetime.now().strftime("%d-%m-%y_%H:%M")}_{args.name}_{DATASET}_aug_{CONTRAST}_{VIEW_SAMPLING}_{MAIN_LOSS}_reg_{REG_LOSS}_nfix_{N_fix}_persess_{N_fix_per_session}'
+SEED = args.seed
+RUN_NAME = f'{datetime.datetime.now().strftime("%d-%m-%y_%H:%M")}_{args.name}_seed_{SEED}_{DATASET}_aug_{CONTRAST}_{VIEW_SAMPLING}_{MAIN_LOSS}_reg_{REG_LOSS}_nfix_{N_fix}_persess_{N_fix_per_session}'
+
 
 # only implemented on CORe50
 TRAINING_PERCENTAGE = args.training_percentage

@@ -62,6 +62,12 @@ DATASETS = {
     },
 }
 
+# define manual random seed
+torch.manual_seed(config.SEED)
+random.seed(config.SEED)
+np.random.seed(config.SEED)
+
+
 # custom function
 # -----
 
